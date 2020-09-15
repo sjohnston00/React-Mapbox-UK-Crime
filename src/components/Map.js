@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import ReactMapGl, {Marker, Popup} from 'react-map-gl';
 import axios from 'axios';
 
@@ -13,6 +13,8 @@ export default function Map() {
   const [loading, setLoading] = useState(true);
   const [policeData, setPoliceData] = useState([])
   const [selectedCrime, setSelectedCrime] = useState(null)
+  const searchElem = useRef(null);
+  const chossenCategory = useRef(null);
 
   useEffect(() => {
     setLoading(true)
@@ -28,6 +30,37 @@ export default function Map() {
     setLoading(true)
     const result = await axios(`https://data.police.uk/api/crimes-street/all-crime?lat=${viewport.latitude}&lng=${viewport.longitude}`,)
     await setPoliceData(result.data)
+    setLoading(false)
+  }
+  
+  const searchPlace = async () => {
+    const searchParams = searchElem.current.value;
+    //query the api to get places
+    setLoading(true)
+    const result = await axios(`https://api.mapbox.com/geocoding/v5/mapbox.places/${searchParams}.json?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`)
+    const first_result = await result.data.features[0]
+
+    //set the long and lat of the first place to be viewport long and lat
+    setViewport({
+      ...viewport,
+      longitude: first_result.center[0],
+      latitude: first_result.center[1]
+    })
+    //once searched set the textbox to be empty
+    searchElem.current.value = ""
+    setLoading(false)
+  }
+
+  const filterPoliceData = async () => {
+    if (chossenCategory.current.value === "all-crime") {
+      await refresh();
+      return 
+    }
+      
+    setLoading(true)
+    await refresh();
+    const newArray = policeData.filter(crime => crime.category === chossenCategory.current.value)
+    setPoliceData(newArray);
     setLoading(false)
   }
   
@@ -74,11 +107,17 @@ export default function Map() {
       <button className="refresh-button" disabled={loading} onClick={refresh}>{loading ? 'Loading...' : 'Refresh'}</button>
       <div className="input-group">
         <label htmlFor="Place">Place</label>
-        <input type="text" id="Place" name="Place" placeholder="Search for place..."></input>
+        <input 
+          type="text" 
+          id="Place" 
+          name="Place" 
+          ref={searchElem}
+          placeholder="Search for place..."/>
+        <button onClick={searchPlace}>Search</button>
       </div>
       <div className="input-group">
         <label htmlFor="Crime">Crime</label>
-        <select>
+        <select ref={chossenCategory} onChange={filterPoliceData}>
           <option value="all-crime">All Crime</option>
           <option value="anti-social-behaviour">Anti Social Behaviour</option>
           <option value="bicycle-theft">Bicycle Theft</option>
@@ -95,6 +134,9 @@ export default function Map() {
           <option value="violent-crime">Violent Crime</option>
           <option value="other-crime">Other Crime</option>
         </select>
+      </div>
+
+      <div>
       </div>
 
       <div>
