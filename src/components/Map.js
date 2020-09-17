@@ -16,6 +16,7 @@ export default function Map() {
   const [selectedCrime, setSelectedCrime] = useState(null)
   const searchElem = useRef(null);
   const chossenCategory = useRef(null);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     setLoading(true)
@@ -30,15 +31,28 @@ export default function Map() {
   const refresh = async () => {
     setLoading(true)
     const result = await axios(`https://data.police.uk/api/crimes-street/all-crime?lat=${viewport.latitude}&lng=${viewport.longitude}`,)
-    await setPoliceData(result.data)
+    setPoliceData(result.data)
     setLoading(false)
   }
   
   const searchPlace = async () => {
+    setErrorMessage('');
     const searchParams = searchElem.current.value;
+    if (searchParams === '' || searchParams === null) {
+      setErrorMessage('You must enter a place');
+      return
+    }
     //query the api to get places
     setLoading(true)
     const result = await axios(`https://api.mapbox.com/geocoding/v5/mapbox.places/${searchParams}.json?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`)
+    
+    //validate errors
+    if (result.data.features.length === 0) {
+      setErrorMessage('Not a valid place')
+      setLoading(false)
+      return 
+    }
+
     const first_result = await result.data.features[0]
 
     //set the long and lat of the first place to be viewport long and lat
@@ -59,8 +73,8 @@ export default function Map() {
     }
     setLoading(true)
     await refresh();
-    const newArray = policeData.filter(crime => crime.category === chossenCategory.current.value)
-    setPoliceData(newArray);
+    const filteredPoliceData = policeData.filter(crime => crime.category === chossenCategory.current.value)
+    setPoliceData(filteredPoliceData);
     setLoading(false)
   }
   
@@ -110,15 +124,19 @@ export default function Map() {
         <div className="config-area">
           <button className="refresh-button" disabled={loading} onClick={refresh}>{loading ? 'Loading...' : 'Refresh'}</button>
           <div className="input-group">
-            <label htmlFor="Place">Place</label>
+            <label htmlFor="Place">Place <b className="errorMessage">{errorMessage}</b></label>
             <input 
               type="text" 
               id="Place" 
               name="Place" 
               ref={searchElem}
-              placeholder="Search for place..."/>
+              placeholder="Search for place..."
+              // onEnterPressed toggle search place function
+              onKeyUp={(e) => {if (e.keyCode === 13) {searchPlace()}}}
+              />
             <button onClick={searchPlace}>Search</button>
           </div>
+
           <div className="input-group">
             <label htmlFor="Crime">Crime</label>
             <select ref={chossenCategory} onChange={filterPoliceData}>
