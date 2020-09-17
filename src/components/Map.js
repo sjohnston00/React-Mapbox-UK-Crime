@@ -77,7 +77,7 @@ export default function Map() {
     setPoliceData(filteredPoliceData);
     setLoading(false)
   }
-  
+
   return (
     <>
       <ReactMapGl 
@@ -132,7 +132,7 @@ export default function Map() {
               ref={searchElem}
               placeholder="Search for place..."
               // onEnterPressed toggle search place function
-              onKeyUp={(e) => {if (e.keyCode === 13) {searchPlace()}}}
+              onKeyUp={(e) => {e.keyCode === 13 && searchPlace()}}
               />
             <button onClick={searchPlace}>Search</button>
           </div>
@@ -159,7 +159,7 @@ export default function Map() {
           </div>
 
           <div>
-            <p>Number of crimes: {policeData.length}</p>
+            <p>Number of crimes in area: {policeData.length}</p>
             <p>Longitude: {viewport.longitude.toFixed(4)}</p>
             <p>Latitude: {viewport.latitude.toFixed(4)}</p>
           </div>
