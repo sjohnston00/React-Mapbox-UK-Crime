@@ -78,6 +78,25 @@ export default function Map() {
     setLoading(false)
   }
 
+  const closeSideBar = () => {
+    const viewButton = document.getElementById('viewButton');
+    const sidebar = document.getElementById('sidebar');
+
+    sidebar.style.width = '0px'
+    sidebar.style.padding = '0px'
+
+    viewButton.style.visibility = 'visible'
+  }
+  
+  const openSideBar = (e) => {
+    const viewButton = document.getElementById('viewButton');
+    const sidebar = document.getElementById('sidebar');
+    sidebar.style.width = '200px'
+    sidebar.style.padding = '60px 10px'
+    
+    viewButton.style.visibility = 'hidden'
+  }
+
   return (
     <>
       <ReactMapGl 
@@ -120,48 +139,52 @@ export default function Map() {
             </div>
           </Popup>
         )}
+        <a className="sidebar-button" onClick={openSideBar} id='viewButton'>View</a>
+        <div className="config-area" id="sidebar">
+          <a href="javascript:void(0)" className="close-button" onClick={closeSideBar}>X</a>
+          <div className="config-elements" id="sidebarElements">
+            <div className="input-group">
+              <label htmlFor="Place">Place </label>
+              <label htmlFor="Place"><b className="errorMessage">{errorMessage}</b></label>
+              <input 
+                type="text" 
+                id="Place" 
+                name="Place" 
+                ref={searchElem}
+                placeholder="Search for place..."
+                // onEnterPressed toggle search place function
+                onKeyUp={(e) => {e.key === 'Enter' && searchPlace()}}
+                />
+              <button className="search-button" onClick={searchPlace}>Search</button>
+            </div>
 
-        <div className="config-area">
-          <button className="refresh-button" disabled={loading} onClick={refresh}>{loading ? 'Loading...' : 'Refresh'}</button>
-          <div className="input-group">
-            <label htmlFor="Place">Place <b className="errorMessage">{errorMessage}</b></label>
-            <input 
-              type="text" 
-              id="Place" 
-              name="Place" 
-              ref={searchElem}
-              placeholder="Search for place..."
-              // onEnterPressed toggle search place function
-              onKeyUp={(e) => {e.keyCode === 13 && searchPlace()}}
-              />
-            <button onClick={searchPlace}>Search</button>
-          </div>
+            <div className="input-group">
+              <label htmlFor="Crime">Crime</label>
+              <select ref={chossenCategory} onChange={filterPoliceData}>
+                <option value="all-crime">All Crime</option>
+                <option value="anti-social-behaviour">Anti Social Behaviour</option>
+                <option value="bicycle-theft">Bicycle Theft</option>
+                <option value="burglary">Burglary</option>
+                <option value="criminal-damage-arson">Criminal damage and arson</option>
+                <option value="drugs">Drugs</option>
+                <option value="other-theft">Other Theft</option>
+                <option value="possession-of-weapons">Possession Of Weapons</option>
+                <option value="public-order">Public Order</option>
+                <option value="robbery">Robbery</option>
+                <option value="shoplifting">Shoplifting</option>
+                <option value="theft-from-the-person">Theft From The Person</option>
+                <option value="vehicle-crime">Vehicle Crime</option>
+                <option value="violent-crime">Violent Crime</option>
+                <option value="other-crime">Other Crime</option>
+              </select>
+            </div>
+            <button className="refresh-button" disabled={loading} onClick={refresh}>{loading ? 'Loading...' : 'Refresh'}</button>
 
-          <div className="input-group">
-            <label htmlFor="Crime">Crime</label>
-            <select ref={chossenCategory} onChange={filterPoliceData}>
-              <option value="all-crime">All Crime</option>
-              <option value="anti-social-behaviour">Anti Social Behaviour</option>
-              <option value="bicycle-theft">Bicycle Theft</option>
-              <option value="burglary">Burglary</option>
-              <option value="criminal-damage-arson">Criminal damage and arson</option>
-              <option value="drugs">Drugs</option>
-              <option value="other-theft">Other Theft</option>
-              <option value="possession-of-weapons">Possession Of Weapons</option>
-              <option value="public-order">Public Order</option>
-              <option value="robbery">Robbery</option>
-              <option value="shoplifting">Shoplifting</option>
-              <option value="theft-from-the-person">Theft From The Person</option>
-              <option value="vehicle-crime">Vehicle Crime</option>
-              <option value="violent-crime">Violent Crime</option>
-              <option value="other-crime">Other Crime</option>
-            </select>
-          </div>
-
-          <div>
-            <p>Number of crimes in area: {policeData.length}</p>
-            <p>Longitude: {viewport.longitude.toFixed(4)}</p>
-            <p>Latitude: {viewport.latitude.toFixed(4)}</p>
+            <div className="map-info">
+              <p>Number of crimes in area: <b>{policeData.length}</b></p>
+              <p>Longitude: <b>{viewport.longitude.toFixed(4)}</b></p>
+              <p>Latitude: <b>{viewport.latitude.toFixed(4)}</b></p>
+            </div>
           </div>
         </div>
     </ReactMapGl>
