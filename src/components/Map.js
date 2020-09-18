@@ -1,3 +1,5 @@
+/* eslint-disable no-script-url */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useState, useEffect, useRef} from 'react'
 import {PureComponent} from 'react';
 import ReactMapGl, {Marker, Popup} from 'react-map-gl';
@@ -63,7 +65,6 @@ export default function Map() {
     })
     //once searched set the textbox to be empty
     searchElem.current.value = ""
-    setLoading(false)
   }
 
   const filterPoliceData = async () => {
@@ -95,6 +96,10 @@ export default function Map() {
     sidebar.style.padding = '60px 10px'
     
     viewButton.style.visibility = 'hidden'
+  }
+
+  const clearMarkers = () => {
+    setPoliceData([]);
   }
 
   return (
@@ -178,7 +183,11 @@ export default function Map() {
                 <option value="other-crime">Other Crime</option>
               </select>
             </div>
+
+
             <button className="refresh-button" disabled={loading} onClick={refresh}>{loading ? 'Loading...' : 'Refresh'}</button>
+            <button className="clear-markers-button" onClick={clearMarkers}>Clear Markers</button>
+
 
             <div className="map-info">
               <p>Number of crimes in area: <b>{policeData.length}</b></p>
