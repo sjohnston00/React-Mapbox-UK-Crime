@@ -1,7 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useState, useEffect, useRef} from 'react'
-import {PureComponent} from 'react';
 import ReactMapGl, {Marker, Popup} from 'react-map-gl';
 import axios from 'axios';
 
