@@ -3,7 +3,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useState, useEffect, useRef} from 'react'
 import ReactMapGl, {Marker, Popup} from 'react-map-gl';
+import PlacesAutocomplete, {geocodeByAddress, getLatLng} from 'react-places-autocomplete';
 import axios from 'axios';
+import { logDOM } from '@testing-library/react';
+
 
 export default function Map() {
   const [viewport, setViewport] = useState({
@@ -19,6 +22,8 @@ export default function Map() {
   const searchElem = useRef(null);
   const chossenCategory = useRef(null);
   const [errorMessage, setErrorMessage] = useState('');
+  const [address, setAddress] = useState('');
+  const [coordinates, setCoordinates] = useState({lat: null, lng: null})
 
   useEffect(() => {
     setLoading(true)
@@ -39,32 +44,26 @@ export default function Map() {
   
   const searchPlace = async () => {
     setErrorMessage('');
-    const searchParams = searchElem.current.value;
+    const searchParams = searchElem.current.props.value;
     if (searchParams === '' || searchParams === null) {
       setErrorMessage('You must enter a place');
       return
     }
     //query the api to get places
     setLoading(true)
-    const result = await axios(`https://api.mapbox.com/geocoding/v5/mapbox.places/${searchParams}.json?access_token=${process.env.REACT_APP_MAPBOX_TOKEN}`)
-    
-    //validate errors
-    if (result.data.features.length === 0) {
-      setErrorMessage('Not a valid place')
-      setLoading(false)
-      return 
-    }
 
-    const first_result = await result.data.features[0]
+    const results = await geocodeByAddress(searchParams)
+    const latlng = await getLatLng(results[0]);
+
 
     //set the long and lat of the first place to be viewport long and lat
     setViewport({
       ...viewport,
-      longitude: first_result.center[0],
-      latitude: first_result.center[1]
+      longitude: latlng.lng,
+      latitude: latlng.lat
     })
-    //once searched set the textbox to be empty
-    searchElem.current.value = ""
+
+    await refresh();
   }
 
   const filterPoliceData = async () => {
@@ -151,7 +150,41 @@ export default function Map() {
             <div className="input-group">
               <label htmlFor="Place">Place </label>
               <label htmlFor="Place"><b className="errorMessage">{errorMessage}</b></label>
-              <input 
+              <div>
+                <PlacesAutocomplete value={address} onChange={setAddress} ref={searchElem}>
+                  {({getInputProps, suggestions, getSuggestionItemProps, loading}) => (
+                    <div>
+                      <input
+                        {...getInputProps({ placeholder: 'Search Place Here...'})}
+                        onKeyUp={e => {e.key === 'Enter' && searchPlace()}} 
+                      />
+                      <div>
+                        <div>
+                          {loading && <div>Loading...</div>}
+
+                          {suggestions.map( suggestion => 
+                            {
+                              const style = {
+                                backgroundColor: suggestion.active ? 'rgba(0,0,0,0.7)' : 'transparent',
+                                color: 'white',
+                                padding: '5px 10px',
+                                borderLeft: '1px solid white',
+                                borderRight: '1px solid white',
+                                borderBottom: '1px solid white',
+                                marginLeft: '5px'
+                              }
+                              return (
+                                <div key={suggestion.placeId} {...getSuggestionItemProps(suggestion, {style})}>{suggestion.description}</div>
+                              )
+                            }
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )} 
+                </PlacesAutocomplete>
+              </div>
+              {/* <input 
                 type="text" 
                 id="Place" 
                 name="Place" 
@@ -159,8 +192,9 @@ export default function Map() {
                 placeholder="Search for place..."
                 // onEnterPressed toggle search place function
                 onKeyUp={(e) => {e.key === 'Enter' && searchPlace()}}
-                />
-              <button className="search-button" onClick={searchPlace}>Search</button>
+                />*/}
+              <button className="search-button" onClick={searchPlace}>Search</button> 
+              <button className="refresh-button" disabled={loading} onClick={refresh}>{loading ? 'Loading...' : 'Refresh'}</button>
             </div>
 
             <div className="input-group">
@@ -185,7 +219,6 @@ export default function Map() {
             </div>
 
 
-            <button className="refresh-button" disabled={loading} onClick={refresh}>{loading ? 'Loading...' : 'Refresh'}</button>
             <button className="clear-markers-button" onClick={clearMarkers}>Clear Markers</button>
 
 
@@ -197,6 +230,12 @@ export default function Map() {
           </div>
         </div>
     </ReactMapGl>
+
+
+
+    <div>
+      
+    </div>
     </>
   )
 }
