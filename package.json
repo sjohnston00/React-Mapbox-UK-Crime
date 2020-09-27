@@ -1,7 +1,10 @@
 {
   "name": "mapbox-police-project",
+  "author": "Sam Johnston",
   "version": "0.1.0",
   "private": true,
+  "description": "A web app that allows users to visualise all the recent crimes commited in a certain area in the UK, (Not including Scotland or Northen Ireland)",
+  "license": "MIT",
   "homepage": "https://police-uk-visualiser.000webhostapp.com/",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
