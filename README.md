@@ -1,4 +1,30 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# UK Crime Visualiser
+
+This a web app that allows users to visualise all the recent crimes commited in a certain area in the UK, (Not including Scotland or Northen Ireland), using the [Mapbox API](https://docs.mapbox.com/api/) and the [React Map GL](https://visgl.github.io/react-map-gl/).
+
+---
+
+This project also made use of the [UK Police DATA API](https://data.police.uk/docs/) which means that all the data coming back from this API is **UK ONLY** and does not include **SCOTLAND OR NORTHEN IRELAND**
+
+---
+License: [MIT](https://opensource.org/licenses/MIT)
+
+## Future Plans
+
+### Web App
+
+I plan on making some minor inprovements to the web as it seems to be all mainly done. Some major issues that needs fixing are:
+
+  1. Fix dropdown list not updating state on change
+  2. Major lags issues especially on older machines or when there are more than 500 markers on the screen at once
+  3. Some design improvements
+
+### Mobile App
+
+Once all the improvements have been made on the web app, I will start working on this app with [React Native](https://reactnative.dev/) so it can be developed for iOS and Andriod respectively.
+
+---
+
 
 ## Available Scripts
 
@@ -27,29 +53,11 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
 ## Learn More
 
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
 
 ### Making a Progressive Web App
 
@@ -62,7 +70,3 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/ad
 ### Deployment
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
