@@ -5,15 +5,17 @@ import React, {useState, useEffect, useRef} from 'react'
 import ReactMapGl, {Marker, Popup} from 'react-map-gl';
 import PlacesAutocomplete, {geocodeByAddress, getLatLng} from 'react-places-autocomplete';
 import axios from 'axios';
-import { logDOM } from '@testing-library/react';
 
 
 export default function Map() {
+  //get the current users location with permision
+  
+  
   const [viewport, setViewport] = useState({
-    height: window.innerHeight,
-    width: window.innerWidth,
-    longitude: -1.548567,
-    latitude: 53.801277,
+    height: '85vh',
+    width: '95vw',
+    longitude: 0.5557,
+    latitude: 52.4016,
     zoom: 15,
   })
   const [loading, setLoading] = useState(true);
@@ -23,9 +25,16 @@ export default function Map() {
   const chossenCategory = useRef(null);
   const [errorMessage, setErrorMessage] = useState('');
   const [address, setAddress] = useState('');
-  const [coordinates, setCoordinates] = useState({lat: null, lng: null})
-
   useEffect(() => {
+
+    navigator.geolocation.getCurrentPosition(pos => {
+      setViewport({
+        ...viewport,
+        latitude: pos.coords.latitude,
+        longitude: pos.coords.longitude
+      });
+      refresh()
+    });
     setLoading(true)
     const fetchresult = async () => {
       const result = await axios(`https://data.police.uk/api/crimes-street/all-crime?lat=${viewport.latitude}&lng=${viewport.longitude}`,)
@@ -33,7 +42,9 @@ export default function Map() {
       setLoading(false)
     }
     fetchresult();
-}, []);
+
+    //get the users 
+    }, []);
 
   const refresh = async () => {
     setLoading(true)
@@ -59,6 +70,7 @@ export default function Map() {
     //set the long and lat of the first place to be viewport long and lat
     setViewport({
       ...viewport,
+      zoom: 12,      
       longitude: latlng.lng,
       latitude: latlng.lat
     })
@@ -102,7 +114,7 @@ export default function Map() {
   }
 
   return (
-    <>
+      <div className="map">
       <ReactMapGl 
       {...viewport}
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
@@ -117,13 +129,15 @@ export default function Map() {
             longitude={Number(crime.location.longitude)}
           >
           <button 
-          onMouseEnter={() => setSelectedCrime(crime)} 
           className="icon-button" 
           onClick={e => {
             e.preventDefault()
             setSelectedCrime(crime);
           }}>
-            <img className="icon" src="/marker.svg" alt="Crime icon"/>
+            <svg className="icon" viewBox="0 0 384 512" xmlns="http://www.w3.org/2000/svg">
+              <path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z"/>
+            </svg>
+
           </button>
           </Marker>
         ))}
@@ -236,6 +250,6 @@ export default function Map() {
     <div>
       
     </div>
-    </>
+    </div>
   )
 }
