@@ -52,7 +52,7 @@ body {
 }
 
 .config-area {
-  position: fixed;
+  position: relative;
   overflow-x: hidden;
   top: 0px;
   left: 0px;
