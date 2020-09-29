@@ -1,51 +1,24 @@
-.header {
-  height: 10vh; 
-  width: 100vw; 
+.gitHub_svg{
+  height: 1.5em;
+  width: 1.5em;
+  fill: #11324B;
+  fill-opacity: .6;
+  transition: .3s ease;
+}
+
+.gitHub_svg:hover {
+  fill-opacity: 1;
+  transform: scale(1.1);
+}
+
+.custom_navbar{
   background-color: #226597;
-  position: relative;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  display: flex;
-  justify-content: space-between;
+  color: #F3F9FB;
 }
-.header h1 {
-  height: 100%;
-  width: 30%;
-  display: flex;
-  align-items: center;
-  padding-left: 1em;
-  letter-spacing: 3px;
+
+.nav_right {
   text-transform: uppercase;
-  font-size: 2em;
-  font-weight: 400;
-  color: #F3F9FB;
-}
-
-.header .navElements {
-  display: flex;
-  padding-right: 1em;
-  height: 100%;
-  align-items: center;
-  
-}
-
-.header .navElements ul {
-  display: flex;
-  align-items: center;
-  list-style-type: none;
-}
-
-.header .navElements li a, .header .navElements .gitHub_svg{
-  text-decoration: none;
-  color: #F3F9FB;
-  font-size: 2em;
-  font-weight: 400;
-  padding: 20px;
-}
-
-.header .navElements .gitHub_svg{
-  height: 1em;
-  width: 1em;
-  fill: #F3F9FB;
-
+  font-weight: 600;
+  font-size: 1.3em;
 }
 
