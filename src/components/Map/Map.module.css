@@ -49,7 +49,7 @@
   overflow: hidden;
   top: 0px;
   left: 0px;
-  background-color: rgba(53, 53, 53, 0.9);
+  background-color: #226597;
   width: 0px;
   height: 100%;
   transition: 0.2s ease;
@@ -63,7 +63,7 @@
 
 .close_button {
   text-decoration: none;
-  color: #818181;
+  color: #e9e7e7;
   position: absolute;
   top: 10px;
   right: 20px;
@@ -73,7 +73,8 @@
 
 .close_button:hover {
   transform: scale(1.4) rotate(90deg);
-  color: #226597;
+  color: #11324B;
+  text-decoration: none;
 }
 
 .refresh_button, .search_button, .clear_markers_button {
@@ -98,42 +99,13 @@
   transform: translateY(-2px);
 }
 
-.input_group {
-  width: 90%;
-}
-
-.input_group label, input, select{
-  display: block;
-}
-
-.input_group label {
-  font-weight: 700;
-  letter-spacing: 2px;
-  font-size: 30px;
-  margin-bottom: 5px;
-  color: #e9e7e7;
-}
-.input_group input, select {
-  width: 100%;
-  font-size: 16px;
-  padding: 10px 5px;
-  border: 2px solid #000;
-  border-radius: 5px;
-  color: white;
-  background-color: #81818134;
-  transition: 0.2s ease;
-}
-
-.input_group input:focus, select:focus{
-  outline: none;
-}
 .popup {
   text-align: center;
   min-width: 300px;
 
 }
 .error_Message {
-  color: #226597;
+  color: #11324B;
   font-size: 0.8rem;
   font-weight: 400;
 }
@@ -147,12 +119,17 @@
 }
 
 .map_info b {
-  color: #226597;
+  color: #11324B;
 }
 .loading_icon {
   display: block;
   text-align: center;
   animation: load .5s infinite;
+}
+
+.button_area button{
+  display: block;
+  margin: 10px auto;
 }
 
 @-webkit-keyframes load {

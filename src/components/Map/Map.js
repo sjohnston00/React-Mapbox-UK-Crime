@@ -6,6 +6,10 @@ import ReactMapGl, {Marker, Popup} from 'react-map-gl';
 import PlacesAutocomplete, {geocodeByAddress, getLatLng} from 'react-places-autocomplete';
 import axios from 'axios';
 import styles from './Map.module.css'
+import {TextField, Icon, Button, Select, FormControl, InputLabel, MenuItem} from '@material-ui/core'
+import {withStyles} from '@material-ui/core/styles'
+
+
 
 
 export default function Map() {
@@ -17,6 +21,8 @@ export default function Map() {
     zoom: 15,
   })
   const [loading, setLoading] = useState(true);
+
+  const [selectValue, SetselectValue] = useState('')
   const [policeData, setPoliceData] = useState([])
   const [selectedCrime, setSelectedCrime] = useState(null)
   const searchElem = useRef(null);
@@ -81,14 +87,14 @@ export default function Map() {
 
   }
 
-  const filterPoliceData = async () => {
-    if (chossenCategory.current.value === "all-crime") {
+  const filterPoliceData = async (e) => {
+    if (e.target.value === "all-crime") {
       await refresh();
       return
     }
     setLoading(true)
     await refresh();
-    const filteredPoliceData = policeData.filter(crime => crime.category === chossenCategory.current.value)
+    const filteredPoliceData = policeData.filter(crime => crime.category === e.target.value)
     setPoliceData(filteredPoliceData);
     setLoading(false)
   }
@@ -104,10 +110,19 @@ export default function Map() {
   }
 
   const openSideBar = (e) => {
+
+    
     const viewButton = document.getElementById('viewButton');
     const sidebar = document.getElementById('sidebar');
-    sidebar.style.width = '200px'
+    if (window.innerWidth < 900) {
+      sidebar.style.width = '100%'
+    }
+    else {
+      sidebar.style.width = '250px'
+      
+    }
     sidebar.style.padding = '60px 10px'
+
 
     viewButton.style.visibility = 'hidden'
   }
@@ -117,6 +132,54 @@ export default function Map() {
     setPoliceData([]);
     setLoading(false)
   }
+
+
+  const CssTextField = withStyles({
+    root: {
+      '& label.Mui-focused': {
+        color: '#11324B',
+      },
+      '& .MuiInput-underline:after': {
+        borderBottomColor: '#11324B',
+      },
+      '& .MuiOutlinedInput-root': {
+        '& fieldset': {
+          borderColor: '#11324B',
+        },
+        '&:hover fieldset': {
+          borderColor: '#11324B',
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: '#11324B',
+        },
+      },
+    },
+  })(TextField);
+
+  const CssSelect = withStyles({
+    root: {
+      '& .Mui-focused': {
+        borderColor: '#11324B',
+      },
+      '& label.Mui-focused': {
+        color: '#11324B',
+      },
+      '& .MuiSelect-underline:after': {
+        borderBottomColor: '#11324B',
+      },
+      '& .MuiOutlinedSelect-root': {
+        '& fieldset': {
+          borderColor: '#11324B',
+        },
+        '&:hover fieldset': {
+          borderColor: '#11324B',
+        },
+        '&.Mui-focused fieldset': {
+          borderColor: '#11324B',
+        },
+      },
+    },
+  })(Select);
 
   return (
       <div className={styles.map}>
@@ -167,15 +230,16 @@ export default function Map() {
           <a href="javascript:void(0)" className={styles.close_button} onClick={closeSideBar}>X</a>
           <div className={styles.config_elements} id="sidebarElements">
             <div className={styles.input_group}>
-              <label htmlFor="Place">Place </label>
               <label htmlFor="Place"><b className={styles.error_Message}>{errorMessage}</b></label>
               <div>
                 <PlacesAutocomplete value={address} onChange={setAddress} ref={searchElem}>
                   {({getInputProps, suggestions, getSuggestionItemProps, loading}) => (
                     <div>
-                      <input
-                        {...getInputProps({ placeholder: 'Search Place Here...'})}
+                      <CssTextField
+                        {...getInputProps()}
                         onKeyUp={e => {e.key === 'Enter' && searchPlace()}}
+                        label="Search Place"  
+                        variant="outlined"
                       />
                       <div>
                         <div>
@@ -210,37 +274,43 @@ export default function Map() {
                 </svg>
                 </div>
                 :
-                <div>
-                  <button className={styles.search_button} onClick={searchPlace}>Search</button>
-                  <button className={styles.refresh_button} disabled={loading} onClick={refresh}>{loading ? 'Loading...' : 'Refresh'}</button>
+                <div className={styles.button_area}>
+                  <Button onClick={searchPlace} size="large" variant="outlined" color="default">Search</Button>
+                  <Button onClick={loading} size="large" variant="outlined" color="secondary">Refresh</Button>
+
+                  {/* <button className={styles.search_button} onClick={searchPlace}>Search</button>
+                  <button className={styles.refresh_button} disabled={loading} onClick={refresh}>Refresh</button> */}
                 </div>
               }
 
             </div>
 
-            <div className={styles.input_group}>
-              <label htmlFor="Crime">Crime</label>
-              <select ref={chossenCategory} onChange={filterPoliceData}>
-                <option value="all-crime">All Crime</option>
-                <option value="anti-social-behaviour">Anti Social Behaviour</option>
-                <option value="bicycle-theft">Bicycle Theft</option>
-                <option value="burglary">Burglary</option>
-                <option value="criminal-damage-arson">Criminal damage and arson</option>
-                <option value="drugs">Drugs</option>
-                <option value="other-theft">Other Theft</option>
-                <option value="possession-of-weapons">Possession Of Weapons</option>
-                <option value="public-order">Public Order</option>
-                <option value="robbery">Robbery</option>
-                <option value="shoplifting">Shoplifting</option>
-                <option value="theft-from-the-person">Theft From The Person</option>
-                <option value="vehicle-crime">Vehicle Crime</option>
-                <option value="violent-crime">Violent Crime</option>
-                <option value="other-crime">Other Crime</option>
-              </select>
+            <FormControl style={{width: '100%'}} variant="outlined">
+            <InputLabel id="select-label">Category</InputLabel>
+            <CssSelect onChange={filterPoliceData} labelId="select-label" id="select-crime-category">
+              <MenuItem value={'all-crime'}>All Crime</MenuItem>
+              <MenuItem value={'anti-social-behaviour'}>Anti Social Behaviour</MenuItem>
+              <MenuItem value={'bicycle-theft'}>Bicycle Theft</MenuItem>
+              <MenuItem value={'burglary'}>Burglary</MenuItem>
+              <MenuItem value={'criminal-damage-arson'}>Criminal Damage and Arson</MenuItem>
+              <MenuItem value={'drugs'}>Drugs</MenuItem>
+              <MenuItem value={'other-theft'}>Other Theft</MenuItem>
+              <MenuItem value={'possession-of-weapons'}>Possession Of Weapons</MenuItem>
+              <MenuItem value={'public-order'}>Public Order</MenuItem>
+              <MenuItem value={'robbery'}>Robbery</MenuItem>
+              <MenuItem value={'shoplifting'}>Shoplifting</MenuItem>
+              <MenuItem value={'theft-from-the-person'}>Theft From The Person</MenuItem>
+              <MenuItem value={'vehicle-crime'}>Vehicle Crime</MenuItem>
+              <MenuItem value={'violent-crime'}>Violent Crime</MenuItem>
+              <MenuItem value={'other-crime'}>Other Crime</MenuItem>
+            </CssSelect>
+            </FormControl>
+
+            <div className="d-flex justify-content-center m-3">
+              <Button onClick={clearMarkers} size="large" variant="outlined" color="secondary">Clear Markers</Button>
+
             </div>
 
-
-            <button className={styles.clear_markers_button} onClick={clearMarkers}>Clear Markers</button>
 
 
             <div className={styles.map_info}>
