@@ -5,9 +5,9 @@
 }
 
 .Infocard {
+  margin: 10px;
   border: 2px solid #226597;
   border-radius: 16px;
-  flex-direction: row;
 }
 
 
