@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import ReactMapGl, {Marker, Popup, FlyToInterpolator} from 'react-map-gl';
 import PlacesAutocomplete, {geocodeByAddress, getLatLng} from 'react-places-autocomplete';
 import axios from 'axios';
@@ -18,12 +18,12 @@ export default function Map() {
     zoom: 15,
   })
   const [loading, setLoading] = useState(true);
-
   const [policeData, setPoliceData] = useState([])
   const [selectedCrime, setSelectedCrime] = useState(null)
   const [chossenCategory, setChossenCategory] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [address, setAddress] = useState('');
+  const searchInput = useRef(null);
 
 
   useEffect(() => {
@@ -204,20 +204,27 @@ export default function Map() {
             <div className={styles.input_group}>
               <label htmlFor="Place"><b className={styles.error_Message}>{errorMessage}</b></label>
               <div>
-                <PlacesAutocomplete value={address} onChange={setAddress}>
+              {/*  */}
+                <PlacesAutocomplete value={address} onChange={setAddress} ref={searchInput}>
                   {({getInputProps, suggestions, getSuggestionItemProps, loading}) => (
                     <div>
                       <CssTextField
-                        {...getInputProps()}
+                        {...getInputProps({placeholder: 'Search Places', className: 'search-input'})}
                         onKeyUp={e => {e.key === 'Enter' && searchPlace()}}
                         label="Search Place"  
                         variant="outlined"
+                        autoFocus
                         style={{width: '100%'}}
                       />
-                      <div>
-                        {loading && <div>Loading...</div>}
+                      <div className="autocomplete-dropdown-container">
+                        {
+                          loading && 
+                            <svg key="1" height="24" width="24" className={styles.loading_icon} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+	                            <path d="M12,22c5.421,0,10-4.579,10-10h-2c0,4.337-3.663,8-8,8s-8-3.663-8-8c0-4.336,3.663-8,8-8V2C6.579,2,2,6.58,2,12 C2,17.421,6.579,22,12,22z"/>
+                            </svg>
+                        }
 
-                        {suggestions.map( suggestion =>
+                        {suggestions.map( (suggestion) =>
                           {
                             const style = {
                               backgroundColor: suggestion.active ? '#11324B' : 'transparent',
@@ -226,7 +233,7 @@ export default function Map() {
                               borderBottom: '1px solid #11324B',
                             }
                             return (
-                              <div key={suggestion.placeId} {...getSuggestionItemProps(suggestion, {style})}>{suggestion.description}</div>
+                                <div  {...getSuggestionItemProps(suggestion, {style})} key={suggestion.placeId}><span>{suggestion.description}</span></div>
                             )
                           }
                         )}
