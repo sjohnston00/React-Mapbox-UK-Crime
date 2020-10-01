@@ -1,16 +1,13 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useState, useEffect, useRef} from 'react'
-import ReactMapGl, {Marker, Popup} from 'react-map-gl';
+import React, {useState, useEffect} from 'react'
+import ReactMapGl, {Marker, Popup, FlyToInterpolator} from 'react-map-gl';
 import PlacesAutocomplete, {geocodeByAddress, getLatLng} from 'react-places-autocomplete';
 import axios from 'axios';
 import styles from './Map.module.css'
-import {TextField, Icon, Button, Select, FormControl, InputLabel, MenuItem} from '@material-ui/core'
+import {TextField, Button, Select, FormControl, InputLabel, MenuItem} from '@material-ui/core'
 import {withStyles} from '@material-ui/core/styles'
-
-
-
 
 export default function Map() {
   const [viewport, setViewport] = useState({
@@ -22,13 +19,13 @@ export default function Map() {
   })
   const [loading, setLoading] = useState(true);
 
-  const [selectValue, SetselectValue] = useState('')
   const [policeData, setPoliceData] = useState([])
   const [selectedCrime, setSelectedCrime] = useState(null)
-  const searchElem = useRef(null);
-  const chossenCategory = useRef(null);
+  const [chossenCategory, setChossenCategory] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [address, setAddress] = useState('');
+
+
   useEffect(() => {
     //get the current users location with permision
     navigator.geolocation.getCurrentPosition(pos => {
@@ -46,8 +43,6 @@ export default function Map() {
       setLoading(false)
     }
     fetchresult();
-
-    //get the users
     }, []);
 
   const refresh = async () => {
@@ -60,7 +55,7 @@ export default function Map() {
   const searchPlace = async () => {
     setErrorMessage('');
     setPoliceData([]);
-    const searchParams = searchElem.current.props.value;
+    const searchParams = address
     if (searchParams === '' || searchParams === null) {
       setErrorMessage('You must enter a place');
       return
@@ -77,9 +72,12 @@ export default function Map() {
       ...viewport,
       zoom: 12,
       longitude: latlng.lng,
-      latitude: latlng.lat
+      latitude: latlng.lat,
+      transitionDuration: 2000,
+      transitionInterpolator: new FlyToInterpolator(),
     })
 
+    setLoading(false)
     //try and refresh the data once the user has been placed in the area
     // await setTimeout(async () => {
     //   await refresh();
@@ -88,13 +86,14 @@ export default function Map() {
   }
 
   const filterPoliceData = async (e) => {
-    if (e.target.value === "all-crime") {
+    setChossenCategory(e.target.value);
+    if (chossenCategory === "all-crime") {
       await refresh();
       return
     }
     setLoading(true)
     await refresh();
-    const filteredPoliceData = policeData.filter(crime => crime.category === e.target.value)
+    const filteredPoliceData = policeData.filter(crime => crime.category === chossenCategory)
     setPoliceData(filteredPoliceData);
     setLoading(false)
   }
@@ -127,9 +126,11 @@ export default function Map() {
     viewButton.style.visibility = 'hidden'
   }
 
-  const clearMarkers = () => {
+  const resetFields = () => {
     setLoading(true)
     setPoliceData([]);
+    setAddress('')
+    setChossenCategory('')
     setLoading(false)
   }
 
@@ -138,9 +139,6 @@ export default function Map() {
     root: {
       '& label.Mui-focused': {
         color: '#11324B',
-      },
-      '& .MuiInput-underline:after': {
-        borderBottomColor: '#11324B',
       },
       '& .MuiOutlinedInput-root': {
         '& fieldset': {
@@ -155,32 +153,6 @@ export default function Map() {
       },
     },
   })(TextField);
-
-  const CssSelect = withStyles({
-    root: {
-      '& .Mui-focused': {
-        borderColor: '#11324B',
-      },
-      '& label.Mui-focused': {
-        color: '#11324B',
-      },
-      '& .MuiSelect-underline:after': {
-        borderBottomColor: '#11324B',
-      },
-      '& .MuiOutlinedSelect-root': {
-        '& fieldset': {
-          borderColor: '#11324B',
-        },
-        '&:hover fieldset': {
-          borderColor: '#11324B',
-        },
-        '&.Mui-focused fieldset': {
-          borderColor: '#11324B',
-        },
-      },
-    },
-  })(Select);
-
   return (
       <div className={styles.map}>
       <ReactMapGl
@@ -225,14 +197,14 @@ export default function Map() {
             </div>
           </Popup>
         )}
-        <a className={styles.sidebar_button} onClick={openSideBar} id='viewButton'>View</a>
+        <Button className={styles.sidebar_button}  onClick={openSideBar} variant="contained" color="primary" id='viewButton'>Configure</Button>
         <div className={styles.config_area} id="sidebar">
-          <a href="javascript:void(0)" className={styles.close_button} onClick={closeSideBar}>X</a>
+          <a href="javascript:void(0)" className={styles.close_button} onClick={closeSideBar}>x</a>
           <div className={styles.config_elements} id="sidebarElements">
             <div className={styles.input_group}>
               <label htmlFor="Place"><b className={styles.error_Message}>{errorMessage}</b></label>
               <div>
-                <PlacesAutocomplete value={address} onChange={setAddress} ref={searchElem}>
+                <PlacesAutocomplete value={address} onChange={setAddress}>
                   {({getInputProps, suggestions, getSuggestionItemProps, loading}) => (
                     <div>
                       <CssTextField
@@ -240,28 +212,24 @@ export default function Map() {
                         onKeyUp={e => {e.key === 'Enter' && searchPlace()}}
                         label="Search Place"  
                         variant="outlined"
+                        style={{width: '100%'}}
                       />
                       <div>
-                        <div>
-                          {loading && <div>Loading...</div>}
+                        {loading && <div>Loading...</div>}
 
-                          {suggestions.map( suggestion =>
-                            {
-                              const style = {
-                                backgroundColor: suggestion.active ? 'rgba(0,0,0,0.7)' : 'transparent',
-                                color: 'white',
-                                padding: '5px 10px',
-                                borderLeft: '1px solid white',
-                                borderRight: '1px solid white',
-                                borderBottom: '1px solid white',
-                                marginLeft: '5px'
-                              }
-                              return (
-                                <div key={suggestion.placeId} {...getSuggestionItemProps(suggestion, {style})}>{suggestion.description}</div>
-                              )
+                        {suggestions.map( suggestion =>
+                          {
+                            const style = {
+                              backgroundColor: suggestion.active ? '#11324B' : 'transparent',
+                              color: suggestion.active ? 'white' : '#11324B',
+                              padding: '5px 10px',
+                              borderBottom: '1px solid #11324B',
                             }
-                          )}
-                        </div>
+                            return (
+                              <div key={suggestion.placeId} {...getSuggestionItemProps(suggestion, {style})}>{suggestion.description}</div>
+                            )
+                          }
+                        )}
                       </div>
                     </div>
                   )}
@@ -275,43 +243,32 @@ export default function Map() {
                 </div>
                 :
                 <div className={styles.button_area}>
-                  <Button onClick={searchPlace} size="large" variant="outlined" color="default">Search</Button>
-                  <Button onClick={loading} size="large" variant="outlined" color="secondary">Refresh</Button>
-
-                  {/* <button className={styles.search_button} onClick={searchPlace}>Search</button>
-                  <button className={styles.refresh_button} disabled={loading} onClick={refresh}>Refresh</button> */}
+                  <Button onClick={searchPlace} size="large" variant="contained" color="default">Search</Button>
+                  <Button onClick={refresh} size="large" variant="contained" color="secondary">Refresh</Button>
                 </div>
               }
-
             </div>
 
             <FormControl style={{width: '100%'}} variant="outlined">
-            <InputLabel id="select-label">Category</InputLabel>
-            <CssSelect onChange={filterPoliceData} labelId="select-label" id="select-crime-category">
-              <MenuItem value={'all-crime'}>All Crime</MenuItem>
-              <MenuItem value={'anti-social-behaviour'}>Anti Social Behaviour</MenuItem>
-              <MenuItem value={'bicycle-theft'}>Bicycle Theft</MenuItem>
-              <MenuItem value={'burglary'}>Burglary</MenuItem>
-              <MenuItem value={'criminal-damage-arson'}>Criminal Damage and Arson</MenuItem>
-              <MenuItem value={'drugs'}>Drugs</MenuItem>
-              <MenuItem value={'other-theft'}>Other Theft</MenuItem>
-              <MenuItem value={'possession-of-weapons'}>Possession Of Weapons</MenuItem>
-              <MenuItem value={'public-order'}>Public Order</MenuItem>
-              <MenuItem value={'robbery'}>Robbery</MenuItem>
-              <MenuItem value={'shoplifting'}>Shoplifting</MenuItem>
-              <MenuItem value={'theft-from-the-person'}>Theft From The Person</MenuItem>
-              <MenuItem value={'vehicle-crime'}>Vehicle Crime</MenuItem>
-              <MenuItem value={'violent-crime'}>Violent Crime</MenuItem>
-              <MenuItem value={'other-crime'}>Other Crime</MenuItem>
-            </CssSelect>
+              <InputLabel className={styles.dropdown_label} id="select-label">Category</InputLabel>
+              <Select className={styles.dropdown} value={chossenCategory} onChange={filterPoliceData} labelId="select-label" id="select-crime-category">
+                <MenuItem value={'all-crime'}>All Crime</MenuItem>
+                <MenuItem value={'anti-social-behaviour'}>Anti Social Behaviour</MenuItem>
+                <MenuItem value={'bicycle-theft'}>Bicycle Theft</MenuItem>
+                <MenuItem value={'burglary'}>Burglary</MenuItem>
+                <MenuItem value={'criminal-damage-arson'}>Criminal Damage and Arson</MenuItem>
+                <MenuItem value={'drugs'}>Drugs</MenuItem>
+                <MenuItem value={'other-theft'}>Other Theft</MenuItem>
+                <MenuItem value={'possession-of-weapons'}>Possession Of Weapons</MenuItem>
+                <MenuItem value={'public-order'}>Public Order</MenuItem>
+                <MenuItem value={'robbery'}>Robbery</MenuItem>
+                <MenuItem value={'shoplifting'}>Shoplifting</MenuItem>
+                <MenuItem value={'theft-from-the-person'}>Theft From The Person</MenuItem>
+                <MenuItem value={'vehicle-crime'}>Vehicle Crime</MenuItem>
+                <MenuItem value={'violent-crime'}>Violent Crime</MenuItem>
+                <MenuItem value={'other-crime'}>Other Crime</MenuItem>
+              </Select>
             </FormControl>
-
-            <div className="d-flex justify-content-center m-3">
-              <Button onClick={clearMarkers} size="large" variant="outlined" color="secondary">Clear Markers</Button>
-
-            </div>
-
-
 
             <div className={styles.map_info}>
               <p>Number of crimes in area: <b>{policeData.length}</b></p>
@@ -319,8 +276,12 @@ export default function Map() {
               <p>Latitude: <b>{viewport.latitude.toFixed(4)}</b></p>
             </div>
           </div>
+          <div className="d-flex justify-content-center m-3">
+            <Button onClick={resetFields} size="large" variant="contained" color="secondary">Reset</Button>
+          </div>
         </div>
     </ReactMapGl>
+    
     </div>
   )
 }

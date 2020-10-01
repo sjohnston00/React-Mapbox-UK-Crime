@@ -30,18 +30,9 @@
 
 
 .sidebar_button {
-  border: 2px solid black;
-  border-radius: 16px;
   position: absolute;
   top: 10px;
   left: 10px;
-  padding: 0.3rem 0.6rem;
-  background-color: #226597;
-  cursor: pointer;
-  font-size: 1.5rem;
-  font-weight: 600;
-  transition: 0.3s ease;
-  color: white;
 }
 
 .config_area {
@@ -65,14 +56,15 @@
   text-decoration: none;
   color: #e9e7e7;
   position: absolute;
-  top: 10px;
+  top: 0px;
   right: 20px;
-  font-size: 40px;
+  font-size: 3em;
+  padding: 10px;
   transition: 0.3s ease;
 }
 
 .close_button:hover {
-  transform: scale(1.4) rotate(90deg);
+  transform:translate(0, -3px) scale(1.4);
   color: #11324B;
   text-decoration: none;
 }
@@ -93,16 +85,28 @@
 
 .refresh_button:hover, .refresh_button:focus, 
 .search_button:hover, .search_button:focus,
-.sidebar_button:hover, .sidebar_button:focus,
 .clear_markers_button:hover, .clear-markers_button:focus{
   outline: none;
   transform: translateY(-2px);
 }
 
-.popup {
+.popup, .mapboxgl-popup-content{
   text-align: center;
   min-width: 300px;
+  border: 1px solid #226597;
+  border-radius: 5px;
+}
 
+.popup button {
+  padding: 5px 15px;
+  font-size: 2em;
+  transition: .3s ease;
+}
+
+.popup button:hover {
+  transform: translate(3px, 3px) scale(1.4) rotate(90deg);
+  color: #226597;
+  background-color: transparent;
 }
 .error_Message {
   color: #11324B;
@@ -125,6 +129,7 @@
   display: block;
   text-align: center;
   animation: load .5s infinite;
+  margin: 20px;
 }
 
 .button_area button{
@@ -148,4 +153,17 @@
   100% {
     transform: rotate(360deg);
   }
+}
+
+.dropdown {
+  border-color: #11324B;
+}
+
+.dropdown:focus {
+  border-color: #11324B;
+
+}
+
+.dropdown_label {
+  color: white;
 }
