@@ -155,6 +155,7 @@ export default function Map() {
   })(TextField);
   return (
       <div className={styles.map}>
+      <h1 style={{textAlign: 'center', marginTop: '30px', fontSize: '50px'}}>Our Map</h1>
       <ReactMapGl
       {...viewport}
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}

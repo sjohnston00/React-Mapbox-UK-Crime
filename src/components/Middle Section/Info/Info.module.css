@@ -9,5 +9,13 @@
   border: 2px solid #226597;
   border-radius: 16px;
 }
+.info_svg {
+  margin: 3px;
+} 
+
+.card_subheading {
+  font-size: 1.1em;
+  margin: 5px 0;
+}
 
 

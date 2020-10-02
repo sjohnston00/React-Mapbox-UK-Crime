@@ -10,7 +10,6 @@ function App() {
     <>
     <Header/>
     <Info/>
-    <h1 style={{textAlign: 'center', marginTop: '30px', fontSize: '50px'}}>Our Map</h1>
     <Map></Map>
     <Footer/>
     </>
