@@ -3,7 +3,6 @@ import Map from './components/Map/Map'
 import Header from './components/Header/Header'
 import Footer from './components/Footer/Footer'
 import Info from "./components/Middle Section/Info/Info";
-import { Container} from 'react-bootstrap'
 
 function App() {
   return (

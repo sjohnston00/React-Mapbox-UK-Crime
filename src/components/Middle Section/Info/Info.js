@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './Info.module.css'
-import { Card, Row, Col, Container } from 'react-bootstrap';
+import { Card, Row, Col } from 'react-bootstrap';
 
 export default function Info() {
   return (
