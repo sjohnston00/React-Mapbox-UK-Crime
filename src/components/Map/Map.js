@@ -1,13 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-script-url */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useState, useEffect, useRef} from 'react'
+import React, {useState, useEffect, useRef} from 'react';
+import MapButton from './MapButton/MapButton';
+import Sidebar from './Sidebar/Sidebar';
 import ReactMapGl, {Marker, Popup, FlyToInterpolator} from 'react-map-gl';
 import PlacesAutocomplete, {geocodeByAddress, getLatLng} from 'react-places-autocomplete';
 import axios from 'axios';
-import styles from './Map.module.css'
-import {TextField, Button, Select, FormControl, InputLabel, MenuItem} from '@material-ui/core'
-import {withStyles} from '@material-ui/core/styles'
+import styles from './Map.module.css';
+import {TextField, Button, Select, FormControl, InputLabel, MenuItem} from '@material-ui/core';
+import {withStyles} from '@material-ui/core/styles';
 
 export default function Map() {
   const [viewport, setViewport] = useState({
@@ -60,14 +62,11 @@ export default function Map() {
       setErrorMessage('You must enter a place');
       return
     }
-    //query the api to get places
     setLoading(true)
 
     const results = await geocodeByAddress(searchParams)
     const latlng = await getLatLng(results[0]);
 
-
-    //set the long and lat of the first place to be viewport long and lat
     setViewport({
       ...viewport,
       zoom: 12,
@@ -78,11 +77,6 @@ export default function Map() {
     })
 
     setLoading(false)
-    //try and refresh the data once the user has been placed in the area
-    // await setTimeout(async () => {
-    //   await refresh();
-    // }, 5000);
-
   }
 
   const filterPoliceData = async (e) => {
@@ -108,24 +102,6 @@ export default function Map() {
     viewButton.style.visibility = 'visible'
   }
 
-  const openSideBar = (e) => {
-
-    
-    const viewButton = document.getElementById('viewButton');
-    const sidebar = document.getElementById('sidebar');
-    if (window.innerWidth < 900) {
-      sidebar.style.width = '100%'
-    }
-    else {
-      sidebar.style.width = '250px'
-      
-    }
-    sidebar.style.padding = '60px 10px'
-
-
-    viewButton.style.visibility = 'hidden'
-  }
-
   const resetFields = () => {
     setLoading(true)
     setPoliceData([]);
@@ -133,7 +109,6 @@ export default function Map() {
     setChossenCategory('')
     setLoading(false)
   }
-
 
   const CssTextField = withStyles({
     root: {
@@ -155,7 +130,6 @@ export default function Map() {
   })(TextField);
   return (
       <div className={styles.map}>
-      <h1 style={{textAlign: 'center', marginTop: '30px', fontSize: '50px'}}>Our Map</h1>
       <ReactMapGl
       {...viewport}
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
@@ -198,7 +172,7 @@ export default function Map() {
             </div>
           </Popup>
         )}
-        <Button className={styles.sidebar_button}  onClick={openSideBar} variant="contained" color="primary" id='viewButton'>Configure</Button>
+        <MapButton/>
         <div className={styles.config_area} id="sidebar">
           <a href="javascript:void(0)" className={styles.close_button} onClick={closeSideBar}>x</a>
           <div className={styles.config_elements} id="sidebarElements">
@@ -289,7 +263,6 @@ export default function Map() {
           </div>
         </div>
     </ReactMapGl>
-    
     </div>
   )
 }

@@ -2,7 +2,11 @@
   display: flex;
   justify-content: center;
   margin: 30px;
-  height: 800px;
+  height: 700px;
+}
+
+.map_heading{
+  color: aqua;
 }
 
 .icon {
@@ -26,13 +30,6 @@
 .icon_button:hover .icon {
   transform: translateY(-10px) scale(1.5);
   fill-opacity: 1;
-}
-
-
-.sidebar_button {
-  position: absolute;
-  top: 10px;
-  left: 10px;
 }
 
 .config_area {
