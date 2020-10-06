@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import styles from './MapButton.module.css';
 import {Button} from '@material-ui/core';
 

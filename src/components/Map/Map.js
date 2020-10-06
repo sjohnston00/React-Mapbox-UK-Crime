@@ -1,7 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-script-url */
-/* eslint-disable jsx-a11y/anchor-is-valid */
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import MapButton from './MapButton/MapButton';
 import Sidebar from './Sidebar/Sidebar';
 import ReactMapGl, {Marker, Popup} from 'react-map-gl';
@@ -41,7 +39,9 @@ export default function Map() {
     }, []);
 
   return (
-      <div className={styles.map}>
+   <> 
+    <h1 className={styles.map_heading}>Our Map</h1>
+    <div className={styles.map}>
         <ReactMapGl
         {...viewport}
         mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_TOKEN}
@@ -81,7 +81,7 @@ export default function Map() {
                 <p>Location: {selectedCrime.location.street.name}</p>
                 {selectedCrime.outcome_status && <p>Outcome: {selectedCrime.outcome_status.category}</p>}
                 <i>Date: {selectedCrime.month}</i>
-              </div>8
+              </div>
             </Popup>
           )}
           <MapButton/>
@@ -94,6 +94,7 @@ export default function Map() {
             setViewport={setViewport}
           />
       </ReactMapGl>
-    </div>
+      </div>  
+    </>
   )
 }

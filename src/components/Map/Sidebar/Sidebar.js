@@ -99,13 +99,14 @@ export default function Sidebar({setLoading, setPoliceData, setViewport, viewpor
   }
   return (
     <div className={styles.config_area} id="sidebar">
-          <a href="javascript:void(0)" className={styles.close_button} onClick={closeSideBar}>x</a>
+          <a className={styles.close_button} onClick={closeSideBar}>x</a>
           <div className={styles.config_elements} id="sidebarElements">
             <div className={styles.input_group}>
               <label htmlFor="Place"><b className={styles.error_Message}>{errorMessage}</b></label>
               <div>
               {/*  */}
                 <PlacesAutocomplete value={address} onChange={setAddress} ref={searchInput}>
+                
                   {({getInputProps, suggestions, getSuggestionItemProps, loading}) => (
                     <div>
                       <CssTextField

@@ -9,7 +9,6 @@ function App() {
     <>
     <Header/>
     <Info/>
-    <h1>Our Map</h1>
     <Map></Map>
     <Footer/>
     </>
