@@ -5,45 +5,6 @@
   height: 700px;
   background-color: rgb(248, 248, 248);
 }
-.icon {
-  width: 25px !important;
-  height: 25px !important;
-  fill: #226597;
-  fill-opacity: .7;
-  transition: .3s ease;
-}
-.icon path {
-  stroke: black;
-  stroke-width: 5px;
-}
-.icon_button {
-  border: none;
-  outline: none;
-  cursor: pointer;
-  background-color: transparent;
-}
-
-.icon_button:hover .icon {
-  transform: translateY(-10px) scale(1.5);
-  fill-opacity: 1;
-}
-.popup, .mapboxgl-popup-content{
-  text-align: center;
-  min-width: 300px;
-}
-
-.popup button {
-  padding: 5px 15px;
-  font-size: 2em;
-  transition: .3s ease;
-}
-
-.popup button:hover {
-  transform: translate(3px, 3px) scale(1.4) rotate(90deg);
-  color: #226597;
-  background-color: transparent;
-}
-
 .map_heading {
   text-align: center;
   font-size: 4em;
