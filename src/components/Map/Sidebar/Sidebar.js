@@ -78,14 +78,13 @@ export default function Sidebar({setLoading, setPoliceData, setViewport, viewpor
   }
 
   const filterPoliceData = async (e) => {
-    setChossenCategory(e.target.value);
     if (chossenCategory === "all-crime") {
       await refresh();
       return
     }
-    setLoading(true)
     await refresh();
-    const filteredPoliceData = policeData.filter(crime => crime.category === chossenCategory)
+    setLoading(true)
+    const filteredPoliceData = await policeData.filter(crime => crime.category === e.target.value)
     setPoliceData(filteredPoliceData);
     setLoading(false)
   }
@@ -160,21 +159,21 @@ export default function Sidebar({setLoading, setPoliceData, setViewport, viewpor
             <FormControl style={{width: '100%'}} variant="outlined">
               <InputLabel className={styles.dropdown_label} id="select-label">Category</InputLabel>
               <Select className={styles.dropdown} value={chossenCategory} onChange={filterPoliceData} labelId="select-label" id="select-crime-category">
-                <MenuItem value={'all-crime'}>All Crime</MenuItem>
-                <MenuItem value={'anti-social-behaviour'}>Anti Social Behaviour</MenuItem>
-                <MenuItem value={'bicycle-theft'}>Bicycle Theft</MenuItem>
-                <MenuItem value={'burglary'}>Burglary</MenuItem>
-                <MenuItem value={'criminal-damage-arson'}>Criminal Damage and Arson</MenuItem>
-                <MenuItem value={'drugs'}>Drugs</MenuItem>
-                <MenuItem value={'other-theft'}>Other Theft</MenuItem>
-                <MenuItem value={'possession-of-weapons'}>Possession Of Weapons</MenuItem>
-                <MenuItem value={'public-order'}>Public Order</MenuItem>
-                <MenuItem value={'robbery'}>Robbery</MenuItem>
-                <MenuItem value={'shoplifting'}>Shoplifting</MenuItem>
-                <MenuItem value={'theft-from-the-person'}>Theft From The Person</MenuItem>
-                <MenuItem value={'vehicle-crime'}>Vehicle Crime</MenuItem>
-                <MenuItem value={'violent-crime'}>Violent Crime</MenuItem>
-                <MenuItem value={'other-crime'}>Other Crime</MenuItem>
+                <MenuItem value='all-crime'>All Crime</MenuItem>
+                <MenuItem value='anti-social-behaviour'>Anti Social Behaviour</MenuItem>
+                <MenuItem value='bicycle-theft'>Bicycle Theft</MenuItem>
+                <MenuItem value='burglary'>Burglary</MenuItem>
+                <MenuItem value='criminal-damage-arson'>Criminal Damage and Arson</MenuItem>
+                <MenuItem value='drugs'>Drugs</MenuItem>
+                <MenuItem value='other-theft'>Other Theft</MenuItem>
+                <MenuItem value='possession-of-weapons'>Possession Of Weapons</MenuItem>
+                <MenuItem value='public-order'>Public Order</MenuItem>
+                <MenuItem value='robbery'>Robbery</MenuItem>
+                <MenuItem value='shoplifting'>Shoplifting</MenuItem>
+                <MenuItem value='theft-from-the-person'>Theft From The Person</MenuItem>
+                <MenuItem value='vehicle-crime'>Vehicle Crime</MenuItem>
+                <MenuItem value='violent-crime'>Violent Crime</MenuItem>
+                <MenuItem value='other-crime'>Other Crime</MenuItem>
               </Select>
             </FormControl>
 
