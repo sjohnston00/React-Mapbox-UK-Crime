@@ -1,29 +1,29 @@
-.icon {
-  width: 25px !important;
-  height: 25px !important;
-  fill: #226597;
-  fill-opacity: .7;
-  transition: .3s ease;
-}
-.icon path {
-  stroke: black;
-  stroke-width: 5px;
-}
-
 .config_area {
   position: relative;
   overflow: hidden;
   top: 0px;
   left: 0px;
-  background-color: #226597;
+  background-color: #226497e9;
   width: 0px;
   height: 100%;
   transition: 0.2s ease;
 }
 
-
 .config_elements {
   margin-top: 10px;
+}
+
+.search_field {
+  width: 100%;
+  border: 1px solid rgba(0, 0, 0, 0.6);
+  height: 50px;
+  border-radius: 4px;
+  background: none;
+  padding: 7px;
+}
+
+.search_field::placeholder {
+  color: rgba(0, 0, 0, 0.6);
 }
 .close_button {
   text-decoration: none;
@@ -38,30 +38,11 @@
 
 .close_button:hover {
   transform:translate(0, -3px) scale(1.4);
-  color: #11324B;
+  color: #e9e7e7;
+
   text-decoration: none;
 }
 
-.refresh_button, .search_button, .clear_markers_button {
-  border: 2px solid black;
-  border-radius: 5px;
-  display: block;
-  margin: 10px auto;
-  padding: 0.3rem;
-  background-color: #226597;
-  cursor: pointer;
-  font-size: 1.5rem;
-  font-weight: 700;
-  transition: 0.3s ease;
-  color: white;
-}
-
-.refresh_button:hover, .refresh_button:focus, 
-.search_button:hover, .search_button:focus,
-.clear_markers_button:hover, .clear-markers_button:focus{
-  outline: none;
-  transform: translateY(-2px);
-}
 .error_Message {
   color: #11324B;
   font-size: 0.8rem;
@@ -109,15 +90,6 @@
   }
 }
 
-.dropdown {
-  border-color: #11324B;
-}
-
-.dropdown:focus {
-  border-color: #11324B;
-
-}
-
-.dropdown_label {
-  color: white;
+.autoComplete_container {
+  background-color: rgba(0, 0, 0, 0.1);
 }

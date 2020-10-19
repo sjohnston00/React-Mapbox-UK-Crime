@@ -16,7 +16,7 @@ export default function MapButton() {
     }
     sidebar.style.padding = '60px 10px'
 
-    viewButton.style.visibility = 'hidden'
+    viewButton.style.display = 'none'
   }
   return (
     <Button className={styles.sidebar_button}  onClick={openSideBar} variant="contained" color="primary" id='viewButton'>Configure</Button>

@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react';
 import MapButton from './MapButton/MapButton';
 import Sidebar from './Sidebar/Sidebar';
 import Markers from './Markers/Markers';
-import ReactMapGl, { Popup} from 'react-map-gl';
+import ReactMapGl from 'react-map-gl';
 import axios from 'axios';
 import styles from './Map.module.css';
 

@@ -7,7 +7,6 @@ import PlacesAutocomplete, {geocodeByAddress, getLatLng} from 'react-places-auto
 import {Button, TextField, FormControl, InputLabel, Select, MenuItem} from '@material-ui/core';
 import {withStyles} from '@material-ui/core/styles';
 import axios from 'axios';
-
 export default function Sidebar({setLoading, setPoliceData, setViewport, viewport, policeData, loading}) {
 
   const [errorMessage, setErrorMessage] = useState('');
@@ -22,7 +21,7 @@ export default function Sidebar({setLoading, setPoliceData, setViewport, viewpor
     sidebar.style.width = '0px'
     sidebar.style.padding = '0px'
 
-    viewButton.style.visibility = 'visible'
+    viewButton.style.display = 'inline'
   }
 
   const CssTextField = withStyles({
@@ -108,15 +107,20 @@ export default function Sidebar({setLoading, setPoliceData, setViewport, viewpor
                 
                   {({getInputProps, suggestions, getSuggestionItemProps, loading}) => (
                     <div>
-                      <CssTextField
+                      {/* <CssTextField
                         {...getInputProps({placeholder: 'Search Places', className: 'search-input'})}
                         onKeyUp={e => {e.key === 'Enter' && searchPlace()}}
                         label="Search Place"  
                         variant="outlined"
                         autoFocus
                         style={{width: '100%'}}
-                      />
-                      <div className="autocomplete-dropdown-container">
+                      /> */}
+                      <input 
+                        {...getInputProps({placeholder: 'Search Places', className: 'search-input'})}
+                        type="text"
+                        className={styles.search_field}  
+                        />
+                      <div className={styles.autoComplete_container}>
                         {
                           loading && 
                             <svg key="1" height="24" width="24" className={styles.loading_icon} viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -127,10 +131,10 @@ export default function Sidebar({setLoading, setPoliceData, setViewport, viewpor
                         {suggestions.map( (suggestion) =>
                           {
                             const style = {
-                              backgroundColor: suggestion.active ? '#11324B' : 'transparent',
-                              color: suggestion.active ? 'white' : '#11324B',
+                              backgroundColor: suggestion.active ? '#fff' : 'transparent',
+                              color: 'rgba(0,0,0,0.7)',
                               padding: '5px 10px',
-                              borderBottom: '1px solid #11324B',
+                              borderBottom: '1px solid #11324B',    
                             }
                             return (
                                 <div  {...getSuggestionItemProps(suggestion, {style})} key={suggestion.placeId}><span>{suggestion.description}</span></div>
