@@ -4,14 +4,12 @@ import React, {useState, useRef} from 'react'
 import styles from './Sidebar.module.css';
 import {FlyToInterpolator} from 'react-map-gl';
 import PlacesAutocomplete, {geocodeByAddress, getLatLng} from 'react-places-autocomplete';
-import {Button, TextField, FormControl, InputLabel, Select, MenuItem} from '@material-ui/core';
-import {withStyles} from '@material-ui/core/styles';
+import {Button} from '@material-ui/core';
 import axios from 'axios';
 export default function Sidebar({setLoading, setPoliceData, setViewport, viewport, policeData, loading}) {
 
   const [errorMessage, setErrorMessage] = useState('');
   const [address, setAddress] = useState('');
-  const [chossenCategory, setChossenCategory] = useState('');
   const searchInput = useRef(null);
 
   const closeSideBar = () => {
@@ -23,30 +21,9 @@ export default function Sidebar({setLoading, setPoliceData, setViewport, viewpor
 
     viewButton.style.display = 'inline'
   }
-
-  const CssTextField = withStyles({
-    root: {
-      '& label.Mui-focused': {
-        color: '#11324B',
-      },
-      '& .MuiOutlinedInput-root': {
-        '& fieldset': {
-          borderColor: '#11324B',
-        },
-        '&:hover fieldset': {
-          borderColor: '#11324B',
-        },
-        '&.Mui-focused fieldset': {
-          borderColor: '#11324B',
-        },
-      },
-    },
-  })(TextField);
-
-
   const refresh = async () => {
     setLoading(true)
-    const result = await axios(`https://data.police.uk/api/crimes-street/all-crime?lat=${viewport.latitude}&lng=${viewport.longitude}`,)
+    const result = await axios(`https://data.police.uk/api/crimes-street/all-crime?lat=${viewport.latitude}&lng=${viewport.longitude}`)
     setPoliceData(result.data)
     setLoading(false)
   }
@@ -64,24 +41,26 @@ export default function Sidebar({setLoading, setPoliceData, setViewport, viewpor
     const results = await geocodeByAddress(searchParams)
     const latlng = await getLatLng(results[0]);
 
-    setViewport({
-      ...viewport,
+    setViewport(prevViewport => {
+      return {
+      ...prevViewport,
       zoom: 12,
       longitude: latlng.lng,
       latitude: latlng.lat,
       transitionDuration: 2000,
       transitionInterpolator: new FlyToInterpolator(),
+      }
     })
 
     setLoading(false)
   }
 
   const filterPoliceData = async (e) => {
-    if (chossenCategory === "all-crime") {
+    e.persist();
+    if (e.target.value === "all-crime") {
       await refresh();
       return
     }
-    await refresh();
     setLoading(true)
     const filteredPoliceData = await policeData.filter(crime => crime.category === e.target.value)
     setPoliceData(filteredPoliceData);
@@ -92,7 +71,6 @@ export default function Sidebar({setLoading, setPoliceData, setViewport, viewpor
     setLoading(true)
     setPoliceData([]);
     setAddress('')
-    setChossenCategory('')
     setLoading(false)
   }
   return (
@@ -107,14 +85,6 @@ export default function Sidebar({setLoading, setPoliceData, setViewport, viewpor
                 
                   {({getInputProps, suggestions, getSuggestionItemProps, loading}) => (
                     <div>
-                      {/* <CssTextField
-                        {...getInputProps({placeholder: 'Search Places', className: 'search-input'})}
-                        onKeyUp={e => {e.key === 'Enter' && searchPlace()}}
-                        label="Search Place"  
-                        variant="outlined"
-                        autoFocus
-                        style={{width: '100%'}}
-                      /> */}
                       <input 
                         {...getInputProps({placeholder: 'Search Places', className: 'search-input'})}
                         type="text"
@@ -160,26 +130,23 @@ export default function Sidebar({setLoading, setPoliceData, setViewport, viewpor
               }
             </div>
 
-            <FormControl style={{width: '100%'}} variant="outlined">
-              <InputLabel className={styles.dropdown_label} id="select-label">Category</InputLabel>
-              <Select className={styles.dropdown} value={chossenCategory} onChange={filterPoliceData} labelId="select-label" id="select-crime-category">
-                <MenuItem value='all-crime'>All Crime</MenuItem>
-                <MenuItem value='anti-social-behaviour'>Anti Social Behaviour</MenuItem>
-                <MenuItem value='bicycle-theft'>Bicycle Theft</MenuItem>
-                <MenuItem value='burglary'>Burglary</MenuItem>
-                <MenuItem value='criminal-damage-arson'>Criminal Damage and Arson</MenuItem>
-                <MenuItem value='drugs'>Drugs</MenuItem>
-                <MenuItem value='other-theft'>Other Theft</MenuItem>
-                <MenuItem value='possession-of-weapons'>Possession Of Weapons</MenuItem>
-                <MenuItem value='public-order'>Public Order</MenuItem>
-                <MenuItem value='robbery'>Robbery</MenuItem>
-                <MenuItem value='shoplifting'>Shoplifting</MenuItem>
-                <MenuItem value='theft-from-the-person'>Theft From The Person</MenuItem>
-                <MenuItem value='vehicle-crime'>Vehicle Crime</MenuItem>
-                <MenuItem value='violent-crime'>Violent Crime</MenuItem>
-                <MenuItem value='other-crime'>Other Crime</MenuItem>
-              </Select>
-            </FormControl>
+            <select className={styles.dropdown} onChange={filterPoliceData}>
+              <option value='all-crime'>All Crime</option>
+              <option value='anti-social-behaviour'>Anti Social Behaviour</option>
+              <option value='bicycle-theft'>Bicycle Theft</option>
+              <option value='burglary'>Burglary</option>
+              <option value='criminal-damage-arson'>Criminal Damage and Arson</option>
+              <option value='drugs'>Drugs</option>
+              <option value='other-theft'>Other Theft</option>
+              <option value='possesion-of-weapons'>Possession Of Weapons</option>
+              <option value='public-order'>Public Order</option>
+              <option value='robbery'>Robbery</option>
+              <option value='shoplifting'>Shoplifting</option>
+              <option value='theft-from-the-person'>Theft From The Person</option>
+              <option value='vehicle-crime'>Vehicle Crime</option>
+              <option value='violent-crime'>Violent Crime</option>
+              <option value='other-crime'>Other Crime</option>
+            </select>
 
             <div className={styles.map_info}>
               <p>Number of crimes in area: <b>{policeData.length}</b></p>
