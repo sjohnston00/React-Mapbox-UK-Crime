@@ -26,7 +26,7 @@ Once all the improvements have been made on the web app, I will start working on
 ---
 ## Prerequisites
 
-You will need to create an `.env.local` file in the head of the directory. In the file put `REACT_APP_MAPBOX_TOKEN=` and add a Mapbox API token. You can do this by heading to [mapbox](https://mapbox.com) and signing up there.
+You will need to create an `.env.local` file in the head of the directory. In the file put `REACT_APP_MAPBOX_TOKEN=` followed by a Mapbox API token. You can do this by heading to [mapbox](https://mapbox.com) and signing up there.
 
 ## Available Scripts
 

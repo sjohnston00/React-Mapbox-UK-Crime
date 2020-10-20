@@ -20,19 +20,33 @@
   transform: translateY(-10px) scale(1.5);
   fill-opacity: 1;
 }
-.popup, .mapboxgl-popup-content{
+.MapBox_popup{
   text-align: center;
   min-width: 300px;
+  height: auto;
 }
 
-.popup button {
-  padding: 5px 15px;
+.popup{
+  background: #226497;
+  margin: -10px -10px -15px;
+  padding: 10px 50px;
+  border-radius: 4px;
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.4);
+}
+
+.popup h2 {
+  text-transform: uppercase;
+  font-size: 1.5  em;
+  font-weight: 600;
+}
+
+.MapBox_popup button {
+  margin: 5px 15px 0 0;
   font-size: 2em;
-  transition: .3s ease;
+  transition: .2s ease;
 }
 
-.popup button:hover {
-  transform: translate(3px, 3px) scale(1.4) rotate(90deg);
-  color: #226597;
+.MapBox_popup button:hover {
+  transform: scale(1.4);
   background-color: transparent;
 }

@@ -1,8 +1,17 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import {Marker, Popup} from 'react-map-gl';
 import styles from "./Markers.module.css";
 
 const Markers = React.memo(function Components({policeData, setSelectedCrime, selectedCrime}) {
+
+  useEffect(() => {
+    const listener = e => {
+      e.key === 'Escape' && setSelectedCrime(null);
+    }
+
+    window.addEventListener('keydown', listener)
+  }, [])
+
   return (
     <>
     {policeData.map((crime) => (
@@ -29,14 +38,14 @@ const Markers = React.memo(function Components({policeData, setSelectedCrime, se
       <Popup
         latitude={Number(selectedCrime.location.latitude)}
         longitude={Number(selectedCrime.location.longitude)}
-        className={styles.popup}
+        className={styles.MapBox_popup}
         onClose={() => setSelectedCrime(null)}
       >
-        <div>
+        <div className={styles.popup}>
           <h2>{selectedCrime.category}</h2>
-          <p>Location: {selectedCrime.location.street.name}</p>
-          {selectedCrime.outcome_status && <p>Outcome: {selectedCrime.outcome_status.category}</p>}
-          <i>Date: {selectedCrime.month}</i>
+          <p><b>Location:</b> {selectedCrime.location.street.name}</p>
+          {selectedCrime.outcome_status && <p><b>Outcome:</b> {selectedCrime.outcome_status.category}</p>}
+          <i><b>Date:</b> {selectedCrime.month}</i>
         </div>
       </Popup>
     )}

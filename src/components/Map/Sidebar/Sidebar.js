@@ -88,6 +88,7 @@ export default function Sidebar({setLoading, setPoliceData, setViewport, viewpor
                       <input 
                         {...getInputProps({placeholder: 'Search Places', className: 'search-input'})}
                         type="text"
+                        onKeyUp={e => e.key === 'Enter' && searchPlace()}
                         className={styles.search_field}  
                         />
                       <div className={styles.autoComplete_container}>
