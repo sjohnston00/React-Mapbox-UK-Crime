@@ -24,7 +24,9 @@ I plan on making some minor inprovements to the web as it seems to be all mainly
 Once all the improvements have been made on the web app, I will start working on this app with [React Native](https://reactnative.dev/) so it can be developed for iOS and Andriod respectively.
 
 ---
+## Prerequisites
 
+You will need to create an `.env.local` file in the head of the directory. In the file put `REACT_APP_MAPBOX_TOKEN=` and add a Mapbox API token. You can do this by heading to [mapbox](https://mapbox.com) and signing up there.
 
 ## Available Scripts
 
