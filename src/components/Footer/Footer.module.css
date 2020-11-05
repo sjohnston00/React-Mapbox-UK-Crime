@@ -1,4 +1,9 @@
 .bgBlue {
   height: 100px;
   background-color: #226597;
+  padding: 10px 30px;
+}
+.bgBlue p {
+  font-size: 1.1em;
+  font-weight: 600;
 }
