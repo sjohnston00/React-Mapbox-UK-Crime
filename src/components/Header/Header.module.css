@@ -1,6 +1,5 @@
-.custom_navbar{
+.custom_navbar {
   background-color: #226597;
-  color: #F3F9FB;
 }
 .nav_right {
   text-transform: uppercase;
@@ -8,11 +7,16 @@
   font-size: 1.3em;
 }
 
+.nav_link {
+  color: #f3f9fb !important;
+}
+
 .header_svg {
   margin: 5px;
 }
 
 .navbar_brand {
-  font-weight:500;
+  font-weight: 500;
   text-transform: uppercase;
+  color: #f3f9fb !important;
 }

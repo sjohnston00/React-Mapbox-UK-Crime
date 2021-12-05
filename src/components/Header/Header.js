@@ -12,21 +12,26 @@ export default function Header() {
       <Navbar.Collapse id='responsive-navbar-nav'>
         <Nav className='mr-auto'></Nav>
         <Nav className={styles.nav_right}>
-          <Nav.Link href='#'>
+          <Nav.Link className={styles.nav_link} href='#'>
             Map
             <MapIcon />
           </Nav.Link>
-          <Nav.Link href='https://data.police.uk/docs/' target='_blank'>
+          <Nav.Link
+            className={styles.nav_link}
+            href='https://data.police.uk/docs/'
+            target='_blank'>
             Police API
             <DocIcon />
           </Nav.Link>
           <Nav.Link
+            className={styles.nav_link}
             href='https://github.com/sjohnston00/React-Mapbox-UK-Crime#readme'
             target='_blank'>
             Docs
             <DiamondIcon />
           </Nav.Link>
           <Nav.Link
+            className={styles.nav_link}
             href='https://github.com/sjohnston00/React-Mapbox-UK-Crime'
             target='_blank'>
             Github

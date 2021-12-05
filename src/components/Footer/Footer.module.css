@@ -1,6 +1,7 @@
 .bgBlue {
   height: 100px;
   background-color: #226597;
+  color: #f3f9fb !important;
   padding: 10px 30px;
 }
 .bgBlue p {
